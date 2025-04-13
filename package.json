@@ -1,0 +1,25 @@
+
+{
+  "name": "tariff-pong",
+  "version": "1.0.0",
+  "description": "Tariff Pong game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:botmatch": "node server.js --botmatch", 
+    "setup": "npm install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pong",
+    "game",
+    "express",
+    "canvas",
+    "node"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": { 
+    "express": "^4.18.2"  
+  }
+}

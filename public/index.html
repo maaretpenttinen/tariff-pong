@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tariff Pong</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="title-logo">
+            <!-- Optional: Add your logo image here -->
+            <h1>TARIFF PONG</h1>
+        </div>
+        <div id="scoreboard">
+            <div id="player1-score" class="score player1">
+                <span class="tariff-label">TARIFF</span>
+                <span class="tariff-value">0%</span>
+            </div>
+            <div id="player2-score" class="score player2">
+                 <span class="tariff-label">TARIFF</span>
+                <span class="tariff-value">0%</span>
+            </div>
+        </div>
+        <!-- Player Areas MUST be before Canvas for correct z-index layering with CSS -->
+         <div id="player1-area" class="player-area">
+             <div id="player1-particles" class="particle-container"></div>
+             <img id="player1-img" src="images/player1.png" alt="Player 1">
+        </div>
+         <div id="player2-area" class="player-area">
+            <div id="player2-particles" class="particle-container"></div>
+            <img id="player2-img" src="images/player2.png" alt="Player 2">
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="instructions">Move mouse to control left paddle</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+/* style.css - FINAL TRY - Transparent Canvas, Background on Container */
+
+:root {
+    --p1-color-base: #0052cc; --p1-color-glow: #66b3ff; --p1-color-intense: #00ffff;
+    --p2-color-base: #cc0000; --p2-color-glow: #ff6666; --p2-color-intense: #ffff00;
+}
+
+body {
+    margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #1a1a1a; font-family: 'Arial', sans-serif; color: white; overflow: hidden;
+}
+
+/* 1. Main Container - Background Layer */
+#game-container {
+    position: relative; /* Establishes stacking context */
+    border: 2px solid #555;
+    /* APPLY BACKGROUND HERE */
+    background: linear-gradient(to right, #001f3f 49.7%, rgba(170,170,170,0.6) 49.7%, rgba(170,170,170,0.6) 50.3%, #3d0000 50.3%);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+    width: 95vw; max-width: 1100px; height: 80vh; max-height: 700px;
+    overflow: hidden;
+    /* No z-index needed, it's the base */
+}
+
+/* 2. Player Area Layer - Above Container Background */
+.player-area {
+    position: absolute;
+    z-index: 1;   /* <<<<< ABOVE CONTAINER BACKGROUND */
+
+    /* Use confirmed working size/position */
+    width: 200px;
+    height: 266px;
+    bottom: 10px;
+
+    overflow: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none; /* Mouse events pass through to canvas */
+}
+#player1-area { left: 25%; transform: translateX(-50%); }
+#player2-area { left: 75%; transform: translateX(-50%); }
+
+/* 2a. Particle Container - Base layer within Player Area */
+.particle-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; /* Relative to player-area */
+    pointer-events: none; overflow: visible;
+}
+
+/* 2b. Image Inside Player Area - Above Particles */
+.player-area img {
+    display: block; width: 100%; height: 100%; object-fit: contain;
+    position: relative; /* Needed for z-index inside player-area */
+    z-index: 1; /* Relative to player-area, above particles */
+    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+    transition: filter 0.4s ease-out, transform 0.4s ease-out;
+}
+
+/* 3. Canvas Layer - Above Players, TRANSPARENT BACKGROUND */
+#gameCanvas {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2;   /* <<<<< ABOVE PLAYER AREAS */
+    background: transparent !important; /* <<<<< TRANSPARENT BACKGROUND (important to override potential defaults) */
+    /* Border drawn directly on canvas is fine */
+    border-left: 3px dashed rgba(255, 255, 255, 0.4);
+    display: block;
+    /* No pointer-events:none needed here, we need mouse moves */
+}
+
+/* 4. UI Layer - Highest z-index */
+#title-logo { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); z-index: 10; /* ... */ }
+#scoreboard { position: absolute; top: 80px; width: 85%; left: 7.5%; display: flex; justify-content: space-between; z-index: 10; /* ... */ }
+#instructions { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 10; /* ... */ }
+/* (Keep scoreboard/title inner styles) */
+#title-logo h1 { margin: 0; padding: 8px 20px; background: radial-gradient(circle, rgba(255,120,0,1) 0%, rgba(255,0,0,1) 65%, rgba(80,0,0,1) 100%); border-radius: 20px; border: 3px solid #ffcc00; }
+.score { width: 48%; text-align: center; padding: 10px; border-radius: 8px; background-color: rgba(0, 0, 0, 0.1); }
+.score .tariff-label { display: block; font-size: 0.5em; margin-bottom: 8px; color: #ddd; }
+.player1 { color: var(--p1-color-glow); }
+.player2 { color: var(--p2-color-glow); }
+
+
+/* --- ALL VISUAL EFFECTS AND ANIMATIONS (Enabled) --- */
+
+/* Player Image Auras / Filters */
+.player-area.powered-low img { filter: drop-shadow(0 0 12px var(--p1-color-glow)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5)); }
+#player2-area.powered-low img { filter: drop-shadow(0 0 12px var(--p2-color-glow)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5)); }
+.player-area.powered-medium img { filter: drop-shadow(0 0 25px var(--p1-color-glow)) drop-shadow(0 0 10px var(--p1-color-base)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4)); transform: scale(1.02); }
+#player2-area.powered-medium img { filter: drop-shadow(0 0 25px var(--p2-color-glow)) drop-shadow(0 0 10px var(--p2-color-base)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4)); transform: scale(1.02); }
+.player-area.powered-high img { filter: drop-shadow(0 0 40px var(--p1-color-intense)) drop-shadow(0 0 20px var(--p1-color-glow)) brightness(1.1) contrast(1.1) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3)); animation: subtle-shake 0.3s infinite alternate; transform: scale(1.05); }
+#player2-area.powered-high img { filter: drop-shadow(0 0 40px var(--p2-color-intense)) drop-shadow(0 0 20px var(--p2-color-glow)) brightness(1.1) contrast(1.1) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.3)); animation: subtle-shake 0.3s infinite alternate; transform: scale(1.05); }
+.player-area.transformed img { filter: drop-shadow(0 0 50px var(--p1-color-intense)) drop-shadow(0 0 25px var(--p1-color-glow)) brightness(0.85) contrast(1.3) saturate(1.2) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2)); animation: strong-shake 0.15s infinite; }
+#player2-area.transformed img { filter: drop-shadow(0 0 50px var(--p2-color-intense)) drop-shadow(0 0 25px var(--p2-color-glow)) brightness(0.85) contrast(1.3) saturate(1.2) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2)); animation: strong-shake 0.15s infinite; }
+
+/* Glowing Eyes Effect */
+.player-area.glowing-eyes::before, .player-area.glowing-eyes::after { content: ''; position: absolute; top: 38%; width: 10px; height: 10px; border-radius: 50%; z-index: 2; /* Eyes above image */ animation: pulse-glow 0.8s infinite alternate; box-shadow: 0 0 8px 4px var(--eye-color), 0 0 15px 8px var(--eye-color-faint); pointer-events: none; }
+#player1-area.glowing-eyes { --eye-color: var(--p1-color-intense); --eye-color-faint: rgba(0, 255, 255, 0.5); }
+#player1-area.glowing-eyes::before { left: 35%; background-color: var(--eye-color); }
+#player1-area.glowing-eyes::after { right: 35%; background-color: var(--eye-color); }
+#player2-area.glowing-eyes { --eye-color: var(--p2-color-intense); --eye-color-faint: rgba(255, 255, 0, 0.5); }
+#player2-area.glowing-eyes::before { left: 35%; background-color: var(--eye-color); }
+#player2-area.glowing-eyes::after { right: 35%; background-color: var(--eye-color); }
+
+/* Particle Styles */
+.particle { position: absolute; border-radius: 50%; opacity: 0; animation: particle-life ease-out forwards; will-change: transform, opacity; filter: blur(1px); pointer-events: none;}
+.particle.p1 { background: radial-gradient(circle, var(--p1-color-intense) 10%, var(--p1-color-glow) 70%); box-shadow: 0 0 6px 1px var(--p1-color-glow); }
+.particle.p2 { background: radial-gradient(circle, var(--p2-color-intense) 10%, var(--p2-color-glow) 70%); box-shadow: 0 0 6px 1px var(--p2-color-glow); }
+/* Hit Sparks need to be above canvas */
+.particle.hit-spark { border-radius: 10% / 50%; filter: blur(0px); opacity: 1; animation: spark-burst 0.3s ease-out forwards; z-index: 3; /* <<<<< ABOVE CANVAS */ pointer-events: none; }
+.particle.hit-spark.p1 { background: white; box-shadow: 0 0 8px 2px var(--p1-color-intense); }
+.particle.hit-spark.p2 { background: white; box-shadow: 0 0 8px 2px var(--p2-color-intense); }
+
+/* Keyframes */
+@keyframes particle-life { 0% { transform: var(--transform-start); opacity: 0.8; } 100% { transform: var(--transform-end); opacity: 0; } }
+@keyframes spark-burst { 0% { transform: translate(var(--tx, 0), var(--ty, 0)) scale(1); opacity: 1; } 100% { transform: translate(var(--tx-end, 0), var(--ty-end, 0)) scale(0.2); opacity: 0; } }
+@keyframes subtle-shake { 0%, 100% { transform: translate(0, 0) rotate(0) scale(var(--scale, 1)); } 50% { transform: translate(1px, -1px) rotate(0.3deg) scale(var(--scale, 1)); } }
+@keyframes strong-shake { 0%, 100% { transform: translate(0, 0) rotate(0) scale(var(--scale, 1)); } 25% { transform: translate(-2px, 1px) rotate(-0.6deg) scale(var(--scale, 1)); } 50% { transform: translate(1px, -2px) rotate(0.6deg) scale(var(--scale, 1)); } 75% { transform: translate(-1px, 2px) rotate(-0.6deg) scale(var(--scale, 1)); } }
+@keyframes pulse-glow { from { opacity: 0.7; transform: scale(0.9); box-shadow: 0 0 6px 3px var(--eye-color), 0 0 12px 6px var(--eye-color-faint); } to { opacity: 1; transform: scale(1.1); box-shadow: 0 0 10px 5px var(--eye-color), 0 0 18px 10px var(--eye-color-faint); } }
